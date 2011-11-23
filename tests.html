@@ -2,67 +2,58 @@
 <html>
 <head>
 <style>
-html, body {
-	margin: 0;
-	padding: 0;
-}
+@import url(http://fonts.googleapis.com/css?family=Convergence);
 
-#container {
+html, body, div, p {
 	position: relative;
+	margin: 0;
+	padding: 0;	
 }
 
-.displayObject {
-	position: absolute;
+body {
+	font-family: 'Convergence', sans-serif;
+}
+
+.display-object {
 	width: 100px;
 	height: 100px;
 }
 
-.red {
+#red-do {
 	background: red;
 }
 
-.green {
+#green-do {
 	background: green;
-	top: 100px;
 }
 
-.blue {
+#blue-do {
 	background: blue;
-	top: 200px;
 	left: 100px;
-}
-
-#comparation {
-	position: relative;
-	top: 400px;
-}
-
-#comparation p {
-	position: relative;
 }
 </style>
 </head>
 <body>
 <div id="container">
-	<div class="red displayObject" id="rDObj"></div>
-	<div class="green displayObject" id="gDObj"></div>
-	<div class="blue displayObject" id="bDObj"></div>
+	<div id="red-do" class="display-object"></div>
+	<div id="green-do" class="display-object"></div>
+	<div id="blue-do" class="display-object"></div>
 </div>
 <div id="comparation">
-	<p id="tweenjs">Tween.js</p>
-	<p id="tweendomjs">Tween-Dom.js</p>
+	<p id="tween-js">Tween.js</p>
+	<p id="tween-dom-js">Tween-Dom.js</p>
 </div>
 <script src="Tween-Dom.js"></script>
 <script>
-	TweenD(document.getElementById('rDObj')).duration(2).to({'left':100});
-	TweenD('gDObj').delay(2).ease(Expo.InOut).to({'left':100});
-	TweenD('bDObj').delay(1).ease(Elastic.Out).from({'left':200});
+	TweenD(document.getElementById('red-do')).duration(2).to({'left':100});
+	TweenD('green-do').delay(2).ease(Expo.InOut).to({'left':100});
+	TweenD('blue-do').delay(1).ease(Elastic.Out).from({'left':0});
 
 
 	/* using regular Tween.js */
 	//TWEEN.start();
 
-	var tweenjs = document.getElementById('tweenjs');
+	var tweenjs = document.getElementById('tween-js');
 	var position = {x:0};
 	new TWEEN.Tween(position).to({x:100}, 2000).easing(TWEEN.Easing.Exponential.EaseInOut).onUpdate(update).start();
 
@@ -72,7 +63,7 @@ html, body {
 	/* --- */
 
 	/* using Tween-Dom.js */
-	TweenD('tweendomjs').duration(2).ease(Expo.InOut).to({'left':100});
+	TweenD('tween-dom-js').duration(2).ease(Expo.InOut).to({'left':100});
 	/* --- */
 </script>
 </body>
