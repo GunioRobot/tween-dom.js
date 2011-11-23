@@ -33,7 +33,7 @@ var TweenD = TweenD || (function(dom){
 		for (var prop in compare) {
 			var computedStyle = dom.currentStyle[prop];
 			var valueMatch = (/[0-9]+/).exec(computedStyle);
-			var value = valueMatch !== null ? valueMath[0] : 0;
+			var value = valueMatch !== null ? Number(valueMatch[0]) : 0;
 			var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(computedStyle);
 			var unit = unitMatch !== null ? unitMatch[0] : 'px';
 			style[prop] = value;
@@ -63,14 +63,102 @@ var TweenD = TweenD || (function(dom){
 			tween.easing(_ease);			
 			tween.onUpdate(_onUpdate);
 			tween.start();
+		},
+		from : function(style) {
+			var to = _computeStyle(_dom, style);
+			for (var prop in style) {
+				var value = style[prop];
+				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
+				var unit = unitMatch !== null ? unitMatch[0] : 'px';
+				_dom.style[prop] = value + unit;
+			}
+			this.to(to);
 		}
 	}
 });
+
+var Linear = Linear || (function(){
+	return {
+		None : TWEEN.Easing.Linear.EaseNone
+	};
+}());
+
+var Quad = Quad || (function(){
+	return {
+		In : TWEEN.Easing.Quadratic.EaseIn,
+		Out : TWEEN.Easing.Quadratic.EaseOut,
+		InOut : TWEEN.Easing.Quadratic.EaseInOut
+	};
+}());
+
+var Cubic = Cubic || (function(){
+	return {
+		In : TWEEN.Easing.Cubic.EaseIn,
+		Out : TWEEN.Easing.Cubic.EaseOut,
+		InOut : TWEEN.Easing.Cubic.EaseInOut
+	};
+}());
+
+var Quart = Quart || (function(){
+	return {
+		In : TWEEN.Easing.Quartic.EaseIn,
+		Out : TWEEN.Easing.Quartic.EaseOut,
+		InOut : TWEEN.Easing.Quartic.EaseInOut
+	};
+}());
+
+var Quint = Quint || (function(){
+	return {
+		In : TWEEN.Easing.Quintic.EaseIn,
+		Out : TWEEN.Easing.Quintic.EaseOut,
+		InOut : TWEEN.Easing.Quintic.EaseInOut
+	};
+}());
+
+var Sine = Sine || (function(){
+	return {
+		In : TWEEN.Easing.Sinusoidal.EaseIn,
+		Out : TWEEN.Easing.Sinusoidal.EaseOut,
+		InOut : TWEEN.Easing.Sinusoidal.EaseInOut
+	};
+}());
 
 var Expo = Expo || (function(){
 	return {
 		In : TWEEN.Easing.Exponential.EaseIn,
 		Out : TWEEN.Easing.Exponential.EaseOut,
 		InOut : TWEEN.Easing.Exponential.EaseInOut
-	}
+	};
+}());
+
+var Circ = Circ || (function(){
+	return {
+		In : TWEEN.Easing.Circular.EaseIn,
+		Out : TWEEN.Easing.Circular.EaseOut,
+		InOut : TWEEN.Easing.Circular.EaseInOut
+	};
+}());
+
+var Elastic = Elastic || (function(){
+	return {
+		In : TWEEN.Easing.Elastic.EaseIn,
+		Out : TWEEN.Easing.Elastic.EaseOut,
+		InOut : TWEEN.Easing.Elastic.EaseInOut
+	};
+}());
+
+var Back = Back || (function(){
+	return {
+		In : TWEEN.Easing.Back.EaseIn,
+		Out : TWEEN.Easing.Back.EaseOut,
+		InOut : TWEEN.Easing.Back.EaseInOut
+	};
+}());
+
+var Bounce = Bounce || (function(){
+	return {
+		In : TWEEN.Easing.Bounce.EaseIn,
+		Out : TWEEN.Easing.Bounce.EaseOut,
+		InOut : TWEEN.Easing.Bounce.EaseInOut
+	};
 }());

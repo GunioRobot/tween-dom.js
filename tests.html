@@ -25,12 +25,19 @@ html, body {
 	background: green;
 	top: 100px;
 }
+
+.blue {
+	background: blue;
+	top: 200px;
+	left: 100px;
+}
 </style>
 </head>
 <body>
 <div id="container">
 	<div class="red displayObject" id="rDObj"></div>
 	<div class="green displayObject" id="gDObj"></div>
+	<div class="blue displayObject" id="bDObj"></div>
 </div>
 <script src="Tween-Dom.js"></script>
 <script>
@@ -38,9 +45,11 @@ html, body {
 
 	var rDObj = document.getElementById('rDObj');
 	var gDObj = document.getElementById('gDObj');
+	var bDObj = document.getElementById('bDObj');
 
 	TweenD(rDObj).duration(2).to({'left':100});
 	TweenD(gDObj).delay(2).ease(Expo.InOut).to({'left':100});
+	TweenD(bDObj).delay(1).ease(Elastic.Out).from({'left':200});
 </script>
 </body>
 </html>
