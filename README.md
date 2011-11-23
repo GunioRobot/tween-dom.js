@@ -1,7 +1,25 @@
 :)
 =============
 
+If you're an ActionScript developer too, probably you're missing tweening engines like [Twenner](http://code.google.com/p/tweener) and [TweenMax](http://www.greensock.com/tweenmax) for JavaScript. Fortunately, there're an excelent tweening engine in JavaScript called [Tween.js](http://github.com/sole/tween.js). But, again, if you came from an ActionScript background, the use of [Tween.js](http://github.com/sole/tween.js) isn't so friendly.
 
-If you're an ActionScript developer too, probably you're missing tweening engines like Twenner and TweenMax for JavaScript. Fortunately, there're an excelent tweening engine in JavaScript called Tween.js. But, again, if you came from an ActionScript background, the use of Tween.js isn't so friendly.
+So, that's what Tween-Dom.js is for. It adapts the [Tween.js](http://github.com/sole/tween.js) to set tweening values in DOM style properties (CSS) directly and adds some more features.
 
-So, that's what Tween-Dom.js is for. It adapts the Tween.js to set tweening values in DOM style properties directly and adds some more features.
+Example
+-------
+
+### Regular Tween.js
+
+	TWEEN.start();
+
+	var target = document.getElementById('target');
+	var position = {x:0};
+	new TWEEN.Tween(position).to({x:100}, 2000).onUpdate(update).start();
+
+	function update() {
+		tweenjs.style.left = this.x + 'px';
+	}
+
+### Tween-Dom.js
+
+	TweenD('target').duration(2).to({'left':100});
