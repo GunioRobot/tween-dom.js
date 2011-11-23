@@ -60,14 +60,15 @@ body {
 	}).from({'left':0});
 
 
-	var tl = new TweenDTimeline();
-	tl.insert(TweenD('tl-target').to({'left':100}), 1);
-	tl.insert(TweenD('tl-target').to({'top':100}), 2);
-	tl.insert(TweenD('tl-target').duration(3).to({'opacity':0}));
-	tl.complete = onTlComplete;
+	var tl = new TimelineTweenD();
+	tl.add(TweenD('tl-target').to({'left':100}), 1);
+	tl.add(TweenD('tl-target').to({'top':100}), 2);
+	tl.add(TweenD('tl-target').duration(3).to({'opacity':0}));
+	tl.onComplete(onTlComplete);
 	tl.play();
 	
 	function onTlComplete() {
+		console.log('tl complete');
 		tl.reverse();
 	}
 
