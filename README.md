@@ -19,7 +19,7 @@ Example
 	new TWEEN.Tween(position).to({x:100}, 2000).easing(TWEEN.Easing.Exponential.EaseInOut).onUpdate(update).start();
 
 	function update() {
-		tweenjs.style.left = this.x + 'px';
+		target.style.left = this.x + 'px';
 	}
 </script>
 ```
