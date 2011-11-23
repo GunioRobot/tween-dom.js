@@ -24,7 +24,7 @@ Example
 </script>
 ```
 
-### Tween-Dom.js
+### Using Tween-Dom.js
 
 ```html
 <script type="text/javascript">
