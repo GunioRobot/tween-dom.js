@@ -47,7 +47,9 @@ body {
 <script>
 	TweenD(document.getElementById('red-do')).duration(2).to({'left':100});
 	TweenD('green-do').delay(2).ease(Expo.InOut).to({'left':100});
-	TweenD('blue-do').delay(1).ease(Elastic.Out).from({'left':0});
+	TweenD('blue-do').delay(1).ease(Elastic.Out).complete(function(){
+		console.log(this);
+	}).from({'left':0});
 
 
 	/* using regular Tween.js */
