@@ -14,14 +14,14 @@ TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.Ea
 
 // tween-dom.js r1 - http://github.com/leocavalcante/tween-dom.js
 var TweenD = TweenD || (function(dom){
-	var _dom = dom;
+	var _dom = typeof dom == 'string' ? document.getElementById(dom) : dom;
 	var _duration = 1000;
 	var _delay = 0;
 	var _ease = TWEEN.Easing.Linear.EaseNone;
 	var _unit = {};
 
 	var _onUpdate = function() {
-		for (var prop in this) _dom.style[prop] = this[prop] + _unit[prop];
+		for (var prop in this) _dom.style[prop] = String(this[prop]) + _unit[prop];
 	}
 
 	var _computeStyle = function(dom, compare) {
@@ -162,3 +162,5 @@ var Bounce = Bounce || (function(){
 		InOut : TWEEN.Easing.Bounce.EaseInOut
 	};
 }());
+
+TWEEN.start();
