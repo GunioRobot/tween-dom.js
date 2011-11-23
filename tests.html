@@ -32,15 +32,15 @@ html, body {
 	<div class="red displayObject" id="rDObj"></div>
 	<div class="green displayObject" id="gDObj"></div>
 </div>
-<script src="Dom-Tween.js"></script>
+<script src="Tween-Dom.js"></script>
 <script>
 	TWEEN.start();
 
 	var rDObj = document.getElementById('rDObj');
 	var gDObj = document.getElementById('gDObj');
 
-	DTween(rDObj).duration(2).to({'left':100});
-	DTween(gDObj).delay(2).ease(Expo.InOut).to({'left':100});
+	TweenD(rDObj).duration(2).to({'left':100});
+	TweenD(gDObj).delay(2).ease(Expo.InOut).to({'left':100});
 </script>
 </body>
 </html>
