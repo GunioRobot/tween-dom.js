@@ -31,6 +31,15 @@ html, body {
 	top: 200px;
 	left: 100px;
 }
+
+#comparation {
+	position: relative;
+	top: 400px;
+}
+
+#comparation p {
+	position: relative;
+}
 </style>
 </head>
 <body>
@@ -39,17 +48,32 @@ html, body {
 	<div class="green displayObject" id="gDObj"></div>
 	<div class="blue displayObject" id="bDObj"></div>
 </div>
+<div id="comparation">
+	<p id="tweenjs">Tween.js</p>
+	<p id="tweendomjs">Tween-Dom.js</p>
+</div>
 <script src="Tween-Dom.js"></script>
 <script>
-	TWEEN.start();
+	TweenD(document.getElementById('rDObj')).duration(2).to({'left':100});
+	TweenD('gDObj').delay(2).ease(Expo.InOut).to({'left':100});
+	TweenD('bDObj').delay(1).ease(Elastic.Out).from({'left':200});
 
-	var rDObj = document.getElementById('rDObj');
-	var gDObj = document.getElementById('gDObj');
-	var bDObj = document.getElementById('bDObj');
 
-	TweenD(rDObj).duration(2).to({'left':100});
-	TweenD(gDObj).delay(2).ease(Expo.InOut).to({'left':100});
-	TweenD(bDObj).delay(1).ease(Elastic.Out).from({'left':200});
+	/* using regular Tween.js */
+	//TWEEN.start();
+
+	var tweenjs = document.getElementById('tweenjs');
+	var position = {x:0};
+	new TWEEN.Tween(position).to({x:100}, 2000).onUpdate(update).start();
+
+	function update() {
+		tweenjs.style.left = this.x + 'px';
+	}
+	/* --- */
+
+	/* using Tween-Dom.js */
+	TweenD('tweendomjs').duration(2).to({'left':100});
+	/* --- */
 </script>
 </body>
 </html>
