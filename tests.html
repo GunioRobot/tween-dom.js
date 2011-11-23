@@ -31,6 +31,9 @@ body {
 	background: blue;
 	left: 100px;
 }
+#tl-target {
+	background: gray;
+}
 </style>
 </head>
 <body>
@@ -43,14 +46,30 @@ body {
 	<p id="tween-js">Tween.js</p>
 	<p id="tween-dom-js">Tween-Dom.js</p>
 </div>
+<div id="timeline">
+	<div id="tl-target" class="display-object"></div>
+</div>
 <script src="Tween-Dom.js"></script>
 <script>
 	TweenD(document.getElementById('red-do')).duration(2).to({'left':100});
+
 	TweenD('green-do').delay(2).ease(Expo.InOut).to({'left':100});
+
 	TweenD('blue-do').delay(1).ease(Elastic.Out).complete(function(){
 		console.log(this);
 	}).from({'left':0});
 
+
+	var tl = new TweenDTimeline();
+	tl.insert(TweenD('tl-target').to({'left':100}), 1);
+	tl.insert(TweenD('tl-target').to({'top':100}), 2);
+	tl.insert(TweenD('tl-target').duration(3).to({'opacity':0}));
+	tl.complete = onTlComplete;
+	tl.play();
+	
+	function onTlComplete() {
+		tl.reverse();
+	}
 
 	/* using regular Tween.js */
 	//TWEEN.start();

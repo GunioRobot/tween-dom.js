@@ -15,6 +15,56 @@ TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.Ea
 /**
  * @author leocavalcante / http://leocavalcante.com
  */
+var TweenDTimeline = TweenDTimeline || (function(){
+	var _tweens = [];
+	var _length = 0;
+
+	var _onComplete = function(callback) {
+		if (callback !== null)
+			callback();
+	}
+
+	return {
+		complete : null,
+		insert : function(tweenD, step) {
+			step = step !== undefined ? step : 0;
+			_tweens.push(new TweenDTimelineItem(tweenD, step));
+			_length += step;
+		},
+		play : function() {
+			for (var i in _tweens) {
+				var item = _tweens[i];
+				item.play();
+			}
+			console.log(_length);
+			setTimeout(_onComplete, _length * 1000, this.complete);
+		},
+		reverse : function() {
+			for (var i = _tweens.length-1; i>=0; i--) {
+				var item = _tweens[i];
+				item.reverse();
+			}
+		}
+	};
+});
+
+var TweenDTimelineItem = TweenDTimelineItem || (function(tweenD, step){
+	var _tween = tweenD.tween.stop();
+	var _step = step !== undefined ? step : 0;
+
+	return {
+		play : function() {
+			setTimeout(function(){
+				_tween.start();
+			}, _step * 1000);
+		},
+		reverse : function() {
+			setTimeout(function(){
+				tweenD.to(tweenD.style);
+			}, _step * 1000);			
+		}
+	};
+});
 
 var TweenD = TweenD || (function(dom){
 	var _dom = typeof dom == 'string' ? document.getElementById(dom) : dom;
@@ -25,7 +75,7 @@ var TweenD = TweenD || (function(dom){
 	var _complete = null;
 
 	var _onUpdate = function() {
-		for (var prop in this) _dom.style[prop] = String(this[prop]) + _unit[prop];
+		for (var prop in this) _dom.style[prop] = this[prop] + _unit[prop];
 	}
 
 	var _onComplete = function() {
@@ -44,7 +94,7 @@ var TweenD = TweenD || (function(dom){
 			var valueMatch = (/[0-9]+/).exec(computedStyle);
 			var value = valueMatch !== null ? Number(valueMatch[0]) : 0;
 			var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(computedStyle);
-			var unit = unitMatch !== null ? unitMatch[0] : 'px';
+			var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
 			style[prop] = value;
 			_unit[prop] = unit;
 		}
@@ -53,6 +103,9 @@ var TweenD = TweenD || (function(dom){
 	}
 
 	return {
+		method : null,
+		style : null,
+		tween : null,
 		duration : function(value) {
 			_duration = value * 1000;
 			return this;
@@ -65,24 +118,30 @@ var TweenD = TweenD || (function(dom){
 			_ease = value;
 			return this;
 		},
-		to : function(style) {
+		to : function(style, autoStart) {
+			this.method = this.method === null ? 'to' : this.method;
+			this.style = _computeStyle(_dom, style);
+			autoStart = autoStart === undefined ?  true : false;
 			var tween = new TWEEN.Tween(_computeStyle(_dom, style));
 			tween.to(style, _duration);
 			tween.delay(_delay);
 			tween.easing(_ease);			
 			tween.onUpdate(_onUpdate);
 			tween.onComplete(_onComplete);
-			tween.start();
+			if (autoStart) tween.start();
+			this.tween = tween;
+			return this;
 		},
 		from : function(style) {
 			var to = _computeStyle(_dom, style);
 			for (var prop in style) {
 				var value = style[prop];
 				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
-				var unit = unitMatch !== null ? unitMatch[0] : 'px';
+				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
 				_dom.style[prop] = value + unit;
 			}
-			this.to(to);
+			this.method = 'from';
+			return this.to(to);
 		},
 		complete : function(listener) {
 			_complete = listener;
