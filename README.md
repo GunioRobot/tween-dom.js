@@ -10,16 +10,24 @@ Example
 
 ### Regular Tween.js
 
+```html
+<script type="text/javascript">
 	TWEEN.start();
 
 	var target = document.getElementById('target');
 	var position = {x:0};
-	new TWEEN.Tween(position).to({x:100}, 2000).onUpdate(update).start();
+	new TWEEN.Tween(position).to({x:100}, 2000).easing(TWEEN.Easing.Exponential.EaseInOut).onUpdate(update).start();
 
 	function update() {
 		tweenjs.style.left = this.x + 'px';
 	}
+</script>
+```
 
 ### Tween-Dom.js
 
-	TweenD('target').duration(2).to({'left':100});
+```html
+<script type="text/javascript">
+	TweenD('target').duration(2).ease(Expo.InOut).to({'left':100});
+</script>
+```
