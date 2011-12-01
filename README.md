@@ -49,5 +49,27 @@ Using
 * `on(event, listener)` Sets a listener to an event.
 
 ### Events
-* `update` Called while the tween is executing.
+* `update` Called while tween is executing.
 * `complete` Called when tween completes.
+
+### Easing
+Tween-Dom.js also offers some shorthands for Tween.js easings.
+
+* `Linear.None` TWEEN.Easing.Linear.EaseNone
+
+* `Quad` TWEEN.Easing.Quadratic
+* `Cubic` TWEEN.Easing.Cubic
+* `Quart` TWEEN.Easing.Quartic
+* `Quint` TWEEN.Easing.Quintic
+* `Sine` TWEEN.Easing.Sinusoidal
+* `Expo` TWEEN.Easing.Exponential
+* `Circ` TWEEN.Easing.Circular
+* `Elastic` TWEEN.Easing.Elastic
+* `Back` TWEEN.Easing.Back
+* `Bounce` TWEEN.Easing.Bounce
+
+And its variations are accessible via
+
+* `In` EaseIn
+* `Out` EaseOut
+* `InOut` EaseInOut
