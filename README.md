@@ -48,15 +48,16 @@ Using
 * `reverse(delay)` Reverses the tween with an additional delay.
 * `on(event, listener)` Sets a listener to an event.
 
+
 ### Events
 * `update` Called while tween is executing.
 * `complete` Called when tween completes.
 
+
 ### Easing
-Tween-Dom.js also offers some shorthands for Tween.js easings.
+Tween-Dom.js also offers some shorthands for [Robert Penner's equations](http://robertpenner.com/easing/) of [Tween.js](http://github.com/sole/tween.js).
 
 * `Linear.None` TWEEN.Easing.Linear.EaseNone
-
 * `Quad` TWEEN.Easing.Quadratic
 * `Cubic` TWEEN.Easing.Cubic
 * `Quart` TWEEN.Easing.Quartic
