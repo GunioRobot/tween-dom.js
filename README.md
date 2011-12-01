@@ -37,4 +37,17 @@ Using
 -------
 
 ### Methods
-* `Tween.dom(element)` Creates a new instance and retrieves it.
+* `Tween.dom(element)` Creates a new instance and retrieves it. `element` can be a HTMLElement or an element id.
+* `duration(seconds)` Defines the tweening duration in seconds.
+* `delay(seconds)` Defines a tweening delay in seconds.
+* `ease(function)` Defines an easing function for tweening.
+* `to(object)` Starts the tween to the defined styles in the object param.
+* `from(object)` Starts the tween from the defined styles in the object param.
+* `play(delay)` Plays the tween with an additional delay.
+* `stop()` Stops the tween.
+* `reverse(delay)` Reverses the tween with an additional delay.
+* `on(event, listener)` Sets a listener to an event.
+
+### Events
+* `update` Called while the tween is executing.
+* `complete` Called when tween completes.
