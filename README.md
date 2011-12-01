@@ -8,7 +8,7 @@ So, that's what Tween-Dom.js is for. It adapts the [Tween.js](http://github.com/
 Example
 -------
 
-### Regular Tween.js
+### Tween.js
 
 ```html
 <script type="text/javascript">
@@ -24,10 +24,17 @@ Example
 </script>
 ```
 
-### Using Tween-Dom.js
+### Tween-Dom.js
 
 ```html
 <script type="text/javascript">
 	Tween.dom('target').duration(2).ease(Expo.InOut).to({'left':100});
 </script>
 ```
+
+
+Using
+-------
+
+### Methods
+* `Tween.dom(element)` Creates a new instance and retrieves it.
