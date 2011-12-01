@@ -65,7 +65,7 @@ body {
 	tl.add(Tween.dom('tl-target').to({'top':100}), 1);
 	tl.add(Tween.dom('tl-target').to({'opacity':0}), 2);
 	tl.on('complete', onTlComplete);
-	tl.on('reverse', onTlReverse)
+	tl.on('reverse', onTlReverse);
 	tl.play();
 	
 	function onTlComplete() {
