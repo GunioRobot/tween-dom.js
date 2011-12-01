@@ -17,41 +17,36 @@ var leocavalcante = leocavalcante || {};
 leocavalcante.Tween = leocavalcante.Tween || {};
 
 leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
-	var _time = [],
-		_line = [],
-		_timestamp = 0,
-		_length = 0,
-		_observer = {},
-		_highest = 0;
+	var _timeline = [], _chain = [], _timestamp = 0, _length = 0, _observer = {}, _highest = 0;
 
 	var _completed = function() {
 		if (_observer.complete) _observer.complete();
-	}
+	};
 
 	var _reversed = function() {
 		if (_observer.reverse) _observer.reverse();
-	}
+	};
 
 	return {
 		add : function(tween, sequence) {
-			_line[_length] = tween.stop();
-			_time[_length] = sequence || 0;
+			_chain[_length] = tween.stop();
+			_timeline[_length] = sequence || 0;
 			_length++;
 			_timestamp += sequence || 0;
 			_highest = Math.max(_highest, sequence || 0);
 		},
 		play : function() {
-			for (var i=0; i<_length; i++) _line[i].play(_time[i]);
+			for (var i=0; i<_length; i++) _chain[i].play(_timeline[i]);
 			setTimeout(_completed, 1000 * _timestamp);
 		},
 		reverse : function() {
-			for (var i=0; i<_length; i++) _line[i].reverse(_highest - _time[i]);
+			for (var i=0; i<_length; i++) _chain[i].reverse(_highest - _timeline[i]);
 			setTimeout(_reversed, 1000 * _timestamp);
 		},
 		on : function(event, listener) {
 			_observer[event] = listener;
 		}
-	}
+	};
 }
 
 leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
@@ -68,12 +63,12 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 
 	var _onUpdate = function() {
 		for (var prop in this) _dom.style[prop] = this[prop] + _unit[prop];
-		if (_observer.update) _observer.update();
-	}
+		if (_observer.update) _observer.update.apply(_dom);
+	};
 
 	var _onComplete = function() {
-		if (_observer.complete) = _observer.complete();
-	}
+		if (_observer.complete) _observer.complete.apply(_dom);
+	};
 
 	var _computeStyle = function(dom, compare) {
 		var style = {};
@@ -92,11 +87,11 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 		}
 
 		return style;
-	}
+	};
 
 	var _start = function() {
 		_tween.start();
-	}
+	};
 
 	return {
 		duration : function(value) {
@@ -124,14 +119,15 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 			return this;
 		},
 		from : function(style) {
+			var from = _computeStyle(_dom, style);
 			for (var prop in style) {
 				var value = style[prop];
 				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
 				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
 				_dom.style[prop] = value + unit;
 			}
-			return this.to(_computeStyle(_dom, style));
-		}
+			return this.to(from);
+		},
 		play : function(delay) {
 			_tween.to(_to, _duration);
 			setTimeout(_start, 1000 * (delay || 0));
@@ -148,8 +144,9 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 		},
 		on : function(event, listener) {
 			_observer[event] = listener;
+			return this;
 		}
-	}
+	};
 };
 
 var Tween = Tween || leocavalcante.Tween;
