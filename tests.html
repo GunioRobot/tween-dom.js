@@ -55,15 +55,15 @@ body {
 
 	Tween.dom('green-do').delay(2).ease(Expo.InOut).to({'left':100});
 
-	Tween.dom('blue-do').delay(1).ease(Elastic.Out).complete(function(){
+	Tween.dom('blue-do').delay(1).ease(Elastic.Out).on('complete', function(){
 		console.log(this);
 	}).from({'left':0});
 
 
-	var tl = new Tween.timeline();
-	tl.add(Tween.dom('tl-target').to({'left':100}), 1);
-	tl.add(Tween.dom('tl-target').to({'top':100}), 2);
-	tl.add(Tween.dom('tl-target').duration(3).to({'opacity':0}), 3);
+	var tl = Tween.timeline();
+	tl.add(Tween.dom('tl-target').to({'left':100}));
+	tl.add(Tween.dom('tl-target').to({'top':100}), 1);
+	tl.add(Tween.dom('tl-target').to({'opacity':0}), 2);
 	tl.on('complete', onTlComplete);
 	tl.on('reverse', onTlReverse)
 	tl.play();
