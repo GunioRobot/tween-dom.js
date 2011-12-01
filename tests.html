@@ -51,25 +51,31 @@ body {
 </div>
 <script src="Tween-Dom.js"></script>
 <script>
-	TweenD(document.getElementById('red-do')).duration(2).to({'left':100});
+	Tween.dom(document.getElementById('red-do')).duration(2).to({'left':100});
 
-	TweenD('green-do').delay(2).ease(Expo.InOut).to({'left':100});
+	Tween.dom('green-do').delay(2).ease(Expo.InOut).to({'left':100});
 
-	TweenD('blue-do').delay(1).ease(Elastic.Out).complete(function(){
+	Tween.dom('blue-do').delay(1).ease(Elastic.Out).complete(function(){
 		console.log(this);
 	}).from({'left':0});
 
 
-	var tl = new TimelineTweenD();
-	tl.add(TweenD('tl-target').to({'left':100}), 1);
-	tl.add(TweenD('tl-target').to({'top':100}), 2);
-	tl.add(TweenD('tl-target').duration(3).to({'opacity':0}));
-	tl.onComplete(onTlComplete);
+	var tl = new Tween.timeline();
+	tl.add(Tween.dom('tl-target').to({'left':100}), 1);
+	tl.add(Tween.dom('tl-target').to({'top':100}), 2);
+	tl.add(Tween.dom('tl-target').duration(3).to({'opacity':0}), 3);
+	tl.on('complete', onTlComplete);
+	tl.on('reverse', onTlReverse)
 	tl.play();
 	
 	function onTlComplete() {
 		console.log('tl complete');
 		tl.reverse();
+	}
+
+	function onTlReverse() {
+		console.log('tl reversed');
+		tl.play();
 	}
 
 	/* using regular Tween.js */
@@ -85,7 +91,7 @@ body {
 	/* --- */
 
 	/* using Tween-Dom.js */
-	TweenD('tween-dom-js').duration(2).ease(Expo.InOut).to({'left':100});
+	Tween.dom('tween-dom-js').duration(2).ease(Expo.InOut).to({'left':100});
 	/* --- */
 </script>
 </body>

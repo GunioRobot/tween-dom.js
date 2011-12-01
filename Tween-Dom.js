@@ -12,90 +12,53 @@ TWEEN.Easing.Elastic.EaseInOut=function(a){var e,c=0.1,b=0.4;if(a==0)return 0;if
 TWEEN.Easing.Back.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*(3.5949095*a-2.5949095);return 0.5*((a-=2)*a*(3.5949095*a+2.5949095)+2)};TWEEN.Easing.Bounce.EaseIn=function(a){return 1-TWEEN.Easing.Bounce.EaseOut(1-a)};TWEEN.Easing.Bounce.EaseOut=function(a){return(a/=1)<1/2.75?7.5625*a*a:a<2/2.75?7.5625*(a-=1.5/2.75)*a+0.75:a<2.5/2.75?7.5625*(a-=2.25/2.75)*a+0.9375:7.5625*(a-=2.625/2.75)*a+0.984375};
 TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.EaseIn(a*2)*0.5;return TWEEN.Easing.Bounce.EaseOut(a*2-1)*0.5+0.5};
 
-/**
- * @author leocavalcante / http://leocavalcante.com
- */
-/*var TweenDTimeline = TweenDTimeline || (function(){
-	var _tweens = [];
-	var _length = 0;
 
-	var _onComplete = function(callback) {
-		if (callback !== null)
-			callback();
+var leocavalcante = leocavalcante || {};
+leocavalcante.Tween = leocavalcante.Tween || {};
+
+leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
+	var _timeline = [];
+	var _sequence = [];
+	var _timestamp = 0;
+	var _length = 0;
+	var _observer = {};
+	var _highest = 0;
+
+	var _completed = function() {
+		if (_observer.complete) _observer.complete();
+	}
+
+	var _reversed = function() {
+		if (_observer.reverse) _observer.reverse();
 	}
 
 	return {
-		complete : null,
-		insert : function(tweenD, step) {
-			step = step !== undefined ? step : 0;
-			_tweens.push(new TweenDTimelineItem(tweenD, step));
-			_length += step;
+		add : function(tween, sequence) {
+			_timeline[_length] = tween.stop();
+			_sequence[_length] = sequence || 0;
+			_length++;
+			_timestamp += sequence || 0;
+			_highest = Math.max(_highest, sequence || 0);
 		},
 		play : function() {
-			for (var i in _tweens) {
-				var item = _tweens[i];
-				item.play();
-			}
-			console.log(_length);
-			setTimeout(_onComplete, _length * 1000, this.complete);
+			for (var i=0; i<_length; i++)
+				_timeline[i].start(_sequence[i]);
+			setTimeout(_completed, 1000 * _timestamp);
 		},
 		reverse : function() {
-			for (var i = _tweens.length-1; i>=0; i--) {
-				var item = _tweens[i];
-				item.reverse();
-			}
+			for (var i=0; i<_length; i++)
+				_timeline[i].reverse(_highest - _sequence[i]);
+			setTimeout(_reversed, 1000 * _timestamp);
+		},
+		on : function(event, listener) {
+			_observer[event] = listener;
 		}
-	};
-});
+	}
+}
 
-var TweenDTimelineItem = TweenDTimelineItem || (function(tweenD, step){
-	var _tween = tweenD.tween.stop();
-	var _step = step !== undefined ? step : 0;
-
-	return {
-		play : function() {
-			setTimeout(function(){
-				_tween.start();
-			}, _step * 1000);
-		},
-		reverse : function() {
-			setTimeout(function(){
-				tweenD.to(tweenD.style);
-			}, _step * 1000);			
-		}
-	};
-});*/
-
-
-var TimelineTweenD = TimelineTweenD || (function(){
-	var _tweens = [];
-	var _steps = [];
-	var _length = 0;
-	var _onComplete = null;
-
-	return {
-		add : function(tween, step) {
-			_tweens.push(tween.stop());
-			_steps.push(step === undefined ? 0 : step);
-			_length += step === undefined ? 0 : step;
-		},
-		play : function() {
-			for (var i in _tweens) _tweens[i].start(_steps[i]);
-			setTimeout(function(){if (_onComplete !== null) _onComplete()}, _length*1000);
-		},
-		reverse : function() {
-			for (var i=_tweens.length-1; i<=0; i--) _tweens[i].reverse(_steps[i]);
-		},
-		onComplete : function(listener) {
-			_onComplete = listener;
-		}
-	};
-});
-
-
-var TweenD = TweenD || (function(dom){
+leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 	var _tween = null;
-	var _dom = typeof dom == 'string' ? document.getElementById(dom) : dom;
+	var _dom = typeof element == 'string' ? document.getElementById(element) : element;
 	var _duration = 1000;
 	var _delay = 0;
 	var _ease = TWEEN.Easing.Linear.EaseNone;
@@ -131,6 +94,10 @@ var TweenD = TweenD || (function(dom){
 		return style;
 	}
 
+	var _start = function() {
+		_tween.start();
+	}
+
 	return {
 		duration : function(value) {
 			_duration = value * 1000;
@@ -145,8 +112,8 @@ var TweenD = TweenD || (function(dom){
 			return this;
 		},
 		to : function(style) {
-			_default = _computeStyle(_dom, style);
-			_tween = new TWEEN.Tween(_default);
+			_default = _default || _computeStyle(_dom, style);
+			_tween = new TWEEN.Tween(_computeStyle(_dom, style));
 			_tween.to(style, _duration);
 			_tween.delay(_delay);
 			_tween.easing(_ease);			
@@ -156,23 +123,21 @@ var TweenD = TweenD || (function(dom){
 			return this;
 		},
 		from : function(style) {
-			var to = _computeStyle(_dom, style);
+			_default = _computeStyle(_dom, style);
 			for (var prop in style) {
 				var value = style[prop];
 				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
 				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
 				_dom.style[prop] = value + unit;
 			}
-			this.method = 'from';
-			return this.to(to);
+			return this.to(_default);
 		},
 		complete : function(listener) {
 			_complete = listener;
 			return this;
 		},
 		start : function(delay) {
-			delay = delay === undefined ? 0 : delay;
-			setTimeout(function(){_tween.start();}, 1000 * delay);
+			setTimeout(_start, 1000 * (delay || 0));
 			return this;
 		},
 		stop : function() {
@@ -181,10 +146,13 @@ var TweenD = TweenD || (function(dom){
 		},
 		reverse : function(delay) {
 			_tween.to(_default, _duration);
-			return this.start(_default);
+			setTimeout(_start, 1000 * (delay || 0));
+			return this;
 		}
 	}
-});
+};
+
+var Tween = Tween || leocavalcante.Tween;
 
 var Linear = Linear || (function(){
 	return {
