@@ -28,6 +28,6 @@ Example
 
 ```html
 <script type="text/javascript">
-	TweenD('target').duration(2).ease(Expo.InOut).to({'left':100});
+	Tween.dom('target').duration(2).ease(Expo.InOut).to({'left':100});
 </script>
 ```
