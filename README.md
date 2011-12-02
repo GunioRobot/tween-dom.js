@@ -74,3 +74,17 @@ And its variations are accessible via
 * `In` EaseIn
 * `Out` EaseOut
 * `InOut` EaseInOut
+
+
+### Timeline
+Tween-Dom.js hah a Timeline class to handle chainned tweens.
+
+* `Tween.timeline()` Creates a new instance and retrieves it.
+* `add(tween, time)` Adds a new tween to timelime, specifying its time. Default time is 0.
+* `play()` Plays the timeline.
+* `reverse()` Reverses the tweens in the timeline.
+* `on(event, listener)` Sets a listener to an event.
+
+### Timeline Events
+* `complete` Called when timeline completes.
+* `reverse` Called when timeline reverse completes.
