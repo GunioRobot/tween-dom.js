@@ -28,7 +28,7 @@ Example
 
 ```html
 <script type="text/javascript">
-	Tween.dom('target').duration(2).ease(Expo.InOut).to({'left':100});
+	Tween.dom('target').duration(2).ease(Expo.InOut).to({'x':100});
 </script>
 ```
 
