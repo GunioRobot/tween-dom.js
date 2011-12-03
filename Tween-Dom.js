@@ -101,8 +101,9 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 		to : function(style) {
 			_specialProperties(style);
 			_from = _from || _computeStyle(_dom, style);
-			_to = style;	
-			_tween = new TWEEN.Tween(_computeStyle(_dom, style));
+			_to = style;
+            _tweening = _computeStyle(_dom, style);
+			_tween = new TWEEN.Tween(_tweening);
 			_tween.to(style, _duration);
 			_tween.delay(_delay);
 			_tween.easing(_ease);			
