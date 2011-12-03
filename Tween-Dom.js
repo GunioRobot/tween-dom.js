@@ -106,7 +106,7 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 			_tween = new TWEEN.Tween(_tweening);
 			_tween.to(style, _duration);
 			_tween.delay(_delay);
-			_tween.easing(_ease);			
+			_tween.easing(_ease);
 			_tween.onUpdate(_onUpdate);
 			_tween.onComplete(_onComplete);
 			_tween.start();
