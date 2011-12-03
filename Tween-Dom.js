@@ -16,8 +16,149 @@ TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.Ea
 var leocavalcante = leocavalcante || {};
 leocavalcante.Tween = leocavalcante.Tween || {};
 
+leocavalcante.Tween.specialPropsMap = {
+	'x' : 'left',
+	'y' : 'top'
+};
+
+leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
+	var _instance,
+		_tween = null,
+		_dom = typeof element == 'string' ? document.getElementById(element) : element,
+		_duration = 1000,
+		_delay = 0,
+		_ease = TWEEN.Easing.Linear.EaseNone,
+		_unit = {},
+		_observer = {},
+		_from = null,
+		_to = null,
+		_tweening = null,
+		_loop = false,
+		_reversing = false;
+
+	var _onUpdate = function() {
+		for (var prop in this) _dom.style[prop] = this[prop] + _unit[prop];
+		if (_observer.update) _observer.update.apply(_dom);
+	};
+
+	var _onComplete = function() {
+		if (_reversing) {
+			if (_observer.reverse) _observer.reverse.apply(_dom);
+			if (_loop) _instance.play();
+			_reversing = false;
+		} else {
+			if (_observer.complete) _observer.complete.apply(_dom);
+			if (_loop) _instance.reverse();
+		}
+	};
+
+	var _computeStyle = function(dom, compare) {
+		var style = {};
+
+		if (dom.currentStyle === undefined)
+			dom.currentStyle = getComputedStyle(dom);
+
+		for (var prop in compare) {
+			var computedStyle = dom.currentStyle[prop];
+			var valueMatch = (/[0-9]+/).exec(computedStyle);
+			var value = valueMatch !== null ? Number(valueMatch[0]) : 0;
+			var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(computedStyle);
+			var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
+			style[prop] = value;
+			_unit[prop] = unit;
+		}
+
+		return style;
+	};
+
+	var _specialProperties = function(style) {
+		for (var prop in style) {
+			var specialProp = leocavalcante.Tween.specialPropsMap[prop];
+			if (specialProp !== undefined) {
+				style[specialProp] = style[prop];
+				delete style[prop];
+			}
+		}
+	};
+
+	var _start = function() {
+		_tween.start();
+	};
+
+	_instance = {
+		duration : function(value) {
+			_duration = value * 1000;
+			return this;
+		},
+		delay : function(value) {
+			_delay = value * 1000;
+			return this;
+		},
+		ease : function(value) {
+			_ease = value;
+			return this;
+		},
+		to : function(style) {
+			_specialProperties(style);
+			_from = _from || _computeStyle(_dom, style);
+			_to = style;	
+			_tween = new TWEEN.Tween(_computeStyle(_dom, style));
+			_tween.to(style, _duration);
+			_tween.delay(_delay);
+			_tween.easing(_ease);			
+			_tween.onUpdate(_onUpdate);
+			_tween.onComplete(_onComplete);
+			_tween.start();
+			return this;
+		},
+		from : function(style) {
+			_specialProperties(style);
+			var from = _computeStyle(_dom, style);
+			_from = style;
+			for (var prop in style) {
+				var value = style[prop];
+				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
+				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
+				_dom.style[prop] = value + unit;
+			}
+
+			return this.to(from);
+		},
+		play : function(delay) {
+			_tween.to(_to, _duration);
+			setTimeout(_start, 1000 * (delay || 0));
+			return this;
+		},
+		stop : function() {
+			_tween.stop();
+			return this;
+		},
+		reverse : function(delay) {
+			_tween.to(_from, _duration);
+			setTimeout(_start, 1000 * (delay || 0));
+			_reversing = true;
+			return this;
+		},
+		on : function(event, listener) {
+			_observer[event] = listener;
+			return this;
+		},
+		yoyo : function(loop) {
+			_loop = loop === undefined ? true : false;
+			return this;
+		}
+	};
+
+	return _instance;
+};
+
 leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
-	var _timeline = [], _chain = [], _timestamp = 0, _length = 0, _observer = {}, _highest = 0;
+	var _timeline = [],
+		_chain = [],
+		_timestamp = 0,
+		_length = 0,
+		_observer = {},
+		_highest = 0;
 
 	var _completed = function() {
 		if (_observer.complete) _observer.complete();
@@ -45,106 +186,6 @@ leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
 		},
 		on : function(event, listener) {
 			_observer[event] = listener;
-		}
-	};
-}
-
-leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
-	var _tween = null,
-		_dom = typeof element == 'string' ? document.getElementById(element) : element,
-		_duration = 1000,
-		_delay = 0,
-		_ease = TWEEN.Easing.Linear.EaseNone,
-		_unit = {},
-		_observer = {},
-		_from = null,
-		_to = null,
-		_tweening = null;
-
-	var _onUpdate = function() {
-		for (var prop in this) _dom.style[prop] = this[prop] + _unit[prop];
-		if (_observer.update) _observer.update.apply(_dom);
-	};
-
-	var _onComplete = function() {
-		if (_observer.complete) _observer.complete.apply(_dom);
-	};
-
-	var _computeStyle = function(dom, compare) {
-		var style = {};
-
-		if (dom.currentStyle === undefined)
-			dom.currentStyle = getComputedStyle(dom);
-
-		for (var prop in compare) {
-			var computedStyle = dom.currentStyle[prop];
-			var valueMatch = (/[0-9]+/).exec(computedStyle);
-			var value = valueMatch !== null ? Number(valueMatch[0]) : 0;
-			var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(computedStyle);
-			var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
-			style[prop] = value;
-			_unit[prop] = unit;
-		}
-
-		return style;
-	};
-
-	var _start = function() {
-		_tween.start();
-	};
-
-	return {
-		duration : function(value) {
-			_duration = value * 1000;
-			return this;
-		},
-		delay : function(value) {
-			_delay = value * 1000;
-			return this;
-		},
-		ease : function(value) {
-			_ease = value;
-			return this;
-		},
-		to : function(style) {
-			_from = _computeStyle(_dom, style);
-			_to = style;	
-			_tween = new TWEEN.Tween(_computeStyle(_dom, style));
-			_tween.to(style, _duration);
-			_tween.delay(_delay);
-			_tween.easing(_ease);			
-			_tween.onUpdate(_onUpdate);
-			_tween.onComplete(_onComplete);
-			_tween.start();
-			return this;
-		},
-		from : function(style) {
-			var from = _computeStyle(_dom, style);
-			for (var prop in style) {
-				var value = style[prop];
-				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
-				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
-				_dom.style[prop] = value + unit;
-			}
-			return this.to(from);
-		},
-		play : function(delay) {
-			_tween.to(_to, _duration);
-			setTimeout(_start, 1000 * (delay || 0));
-			return this;
-		},
-		stop : function() {
-			_tween.stop();
-			return this;
-		},
-		reverse : function(delay) {
-			_tween.to(_from, _duration);
-			setTimeout(_start, 1000 * (delay || 0));
-			return this;
-		},
-		on : function(event, listener) {
-			_observer[event] = listener;
-			return this;
 		}
 	};
 };

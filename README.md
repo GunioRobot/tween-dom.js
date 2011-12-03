@@ -46,12 +46,14 @@ Using
 * `play(delay)` Plays the tween with an additional delay.
 * `stop()` Stops the tween.
 * `reverse(delay)` Reverses the tween with an additional delay.
+* `yoyo(enable)` Reverses and plays the tween continuously. `enable` default value is `true`.
 * `on(event, listener)` Sets a listener to an event.
 
 
 ### Events
 * `update` Called while tween is executing.
 * `complete` Called when tween completes.
+* `reverse` Called when tween reverse completes.
 
 
 ### Easing
@@ -80,11 +82,18 @@ And its variations are accessible via
 Tween-Dom.js hah a Timeline class to handle chainned tweens.
 
 * `Tween.timeline()` Creates a new instance and retrieves it.
-* `add(tween, time)` Adds a new tween to timelime, specifying its time. Default time is 0.
+* `add(tween, time)` Adds a new tween to timelime, specifying its time. Default `time` is 0.
 * `play()` Plays the timeline.
 * `reverse()` Reverses the tweens in the timeline.
 * `on(event, listener)` Sets a listener to an event.
 
-### Timeline Events
+### Timeline events
 * `complete` Called when timeline completes.
 * `reverse` Called when timeline reverse completes.
+
+
+### Special properties
+Tween-Dom.js has also a map of special properties that'll be traslated to existing style properties.
+
+* `x` > left.
+* `y` > top.

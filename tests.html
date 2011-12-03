@@ -51,13 +51,13 @@ body {
 </div>
 <script src="Tween-Dom.js"></script>
 <script>
-	Tween.dom(document.getElementById('red-do')).duration(2).to({'left':100});
+	Tween.dom(document.getElementById('red-do')).duration(2).to({'x':100});
 
-	Tween.dom('green-do').delay(2).ease(Expo.InOut).to({'left':100});
+	Tween.dom('green-do').delay(2).ease(Expo.InOut).to({'x':100});
 
-	Tween.dom('blue-do').delay(1).ease(Elastic.Out).on('complete', function(){
-		console.log(this);
-	}).from({'left':0});
+	Tween.dom('blue-do').delay(1).ease(Elastic.Out).on('reverse', function(){
+		//
+	}).yoyo().from({'left':0});
 
 
 	var tl = Tween.timeline();
@@ -69,12 +69,10 @@ body {
 	tl.play();
 	
 	function onTlComplete() {
-		console.log('tl complete');
 		tl.reverse();
 	}
 
 	function onTlReverse() {
-		console.log('tl reversed');
 		tl.play();
 	}
 
@@ -91,7 +89,7 @@ body {
 	/* --- */
 
 	/* using Tween-Dom.js */
-	Tween.dom('tween-dom-js').duration(2).ease(Expo.InOut).to({'left':100});
+	Tween.dom('tween-dom-js').duration(2).ease(Expo.InOut).to({'x':100});
 	/* --- */
 </script>
 </body>
