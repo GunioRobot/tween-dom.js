@@ -3,9 +3,9 @@
 
 If you're an ActionScript developer too, probably you're missing tweening engines like [Twenner](http://code.google.com/p/tweener) and [TweenMax](http://www.greensock.com/tweenmax) for JavaScript. Fortunately, there're an excelent tweening engine in JavaScript called [Tween.js](http://github.com/sole/tween.js). But, again, if you came from an ActionScript background, the use of [Tween.js](http://github.com/sole/tween.js) isn't so friendly.
 
-So, that's what Tween-Dom.js is for. It adapts the [Tween.js](http://github.com/sole/tween.js) to set tweening values in DOM style properties (CSS) directly and adds some more features.
+So, that's what TweenDOM.js is for. It adapts the [Tween.js](http://github.com/sole/tween.js) to set tweening values in DOM style properties (CSS) directly and adds some more features.
 
-You can see the test.html in action [here](http://c9.io/leocavalcante/tween-dom_js/workspace/tests.html)
+You can see the test.html in action [here](http://c9.io/leocavalcante/TweenDOM.tween_js/workspace/tests.html)
 
 
 Example
@@ -27,11 +27,11 @@ Example
 </script>
 ```
 
-### Tween-Dom.js
+### TweenDOM.js
 
 ```html
 <script type="text/javascript">
-	Tween.dom('target').duration(2).ease(Expo.InOut).to({'x':100});
+	TweenDOM.tween('target').duration(2).ease(Expo.InOut).to({'x':100});
 </script>
 ```
 
@@ -40,7 +40,7 @@ Using
 -------
 
 ### Methods
-* `Tween.dom(element)` Creates a new instance and retrieves it. `element` can be a HTMLElement or an element id.
+* `TweenDOM.tween(element)` Creates a new instance and retrieves it. `element` can be a HTMLElement or an element id.
 * `duration(seconds)` Defines the tweening duration in seconds.
 * `delay(seconds)` Defines a tweening delay in seconds.
 * `ease(function)` Defines an easing function for tweening.
@@ -60,7 +60,7 @@ Using
 
 
 ### Easing
-Tween-Dom.js also offers some shorthands for [Robert Penner's equations](http://robertpenner.com/easing/) of [Tween.js](http://github.com/sole/tween.js).
+TweenDOM.js also offers some shorthands for [Robert Penner's equations](http://robertpenner.com/easing/) of [Tween.js](http://github.com/sole/tween.js).
 
 * `Linear.None` TWEEN.Easing.Linear.EaseNone
 * `Quad` TWEEN.Easing.Quadratic
@@ -82,9 +82,9 @@ And its variations are accessible via
 
 
 ### Timeline
-Tween-Dom.js hah a Timeline class to handle chainned tweens.
+TweenDOM.js hah a Timeline class to handle chainned tweens.
 
-* `Tween.timeline()` Creates a new instance and retrieves it.
+* `TweenDOM.timeline()` Creates a new instance and retrieves it.
 * `add(tween, time)` Adds a new tween to timelime, specifying its time. Default `time` is 0.
 * `play()` Plays the timeline.
 * `reverse()` Reverses the tweens in the timeline.
@@ -96,7 +96,7 @@ Tween-Dom.js hah a Timeline class to handle chainned tweens.
 
 
 ### Special properties
-Tween-Dom.js has also a map of special properties that'll be traslated to existing style properties.
+TweenDOM.js has also a map of special properties that'll be traslated to existing style properties.
 
 * `x` > left.
 * `y` > top.

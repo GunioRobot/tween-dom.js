@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Tween-Dom.js</title>
+		<title>TweenDOM.js</title>
 		<style>
 			@import url(http://fonts.googleapis.com/css?family=Convergence);
 			html, body, div, p {
@@ -41,14 +41,14 @@
 			<p id="tween-js">
 				Tween.js
 			</p>
-			<p id="tween-dom-js">
+			<p id="tweendom-js">
 				Tween-Dom.js
 			</p>
 		</div>
 		<div id="timeline">
 			<div id="tl-target" class="display-object"></div>
 		</div>
-		<script src="tween-dom.js"></script>
+		<script src="TweenDOM.js"></script>
 		<script>
 			TweenDOM.tween(document.getElementById('red-do')).duration(2).to({
 				'x' : 100
@@ -103,7 +103,7 @@
 			/* --- */
 
 			/* using Tween-Dom.js */
-			TweenDOM.tween('tween-dom-js').duration(2).ease(Expo.InOut).to({
+			TweenDOM.tween('tweendom-js').duration(2).ease(Expo.InOut).to({
 				'x' : 100
 			});
 			/* --- */
