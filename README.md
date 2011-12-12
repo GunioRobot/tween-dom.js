@@ -5,7 +5,7 @@ If you're an ActionScript developer too, probably you're missing tweening engine
 
 So, that's what TweenDOM.js is for. It adapts the [Tween.js](http://github.com/sole/tween.js) to set tweening values in DOM style properties (CSS) directly and adds some more features.
 
-You can see the test.html in action [here](http://c9.io/leocavalcante/TweenDOM.tween_js/workspace/tests.html)
+You can see the test.html in action [here](http://dl.dropbox.com/u/5208159/tweendom.js/tests.html)
 
 
 Example
