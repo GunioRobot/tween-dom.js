@@ -13,78 +13,69 @@ TWEEN.Easing.Back.EaseInOut=function(a){if((a*=2)<1)return 0.5*a*a*(3.5949095*a-
 TWEEN.Easing.Bounce.EaseInOut=function(a){if(a<0.5)return TWEEN.Easing.Bounce.EaseIn(a*2)*0.5;return TWEEN.Easing.Bounce.EaseOut(a*2-1)*0.5+0.5};
 
 
-var leocavalcante = leocavalcante || {};
-leocavalcante.Tween = leocavalcante.Tween || {};
 
-leocavalcante.Tween.specialPropsMap = {
+var leocavalcante = leocavalcante || {};
+leocavalcante.TweenDOM = leocavalcante.TweenDOM || {};
+
+leocavalcante.TweenDOM.specialPropsMap = {
 	'x' : 'left',
 	'y' : 'top'
 };
 
-leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
-	var _instance,
-		_tween = null,
-		_dom = typeof element == 'string' ? document.getElementById(element) : element,
-		_duration = 1000,
-		_delay = 0,
-		_ease = TWEEN.Easing.Linear.EaseNone,
-		_unit = {},
-		_observer = {},
-		_from = null,
-		_to = null,
-		_tweening = null,
-		_loop = false,
-		_reversing = false;
+leocavalcante.TweenDOM.tween = leocavalcante.TweenDOM.tween ||
+function(element) {
+	var _instance, _tween = null, _dom = typeof element == 'string' ? document.getElementById(element) : element, _duration = 1000, _delay = 0, _ease = TWEEN.Easing.Linear.EaseNone, _unit = {}, _observer = {}, _from = null, _to = null, _tweening = null, _loop = false, _reversing = false;
 
 	var _onUpdate = function() {
-		for (var prop in this) _dom.style[prop] = this[prop] + _unit[prop];
-		if (_observer.update) _observer.update.apply(_dom);
+		for(var prop in this)
+		_dom.style[prop] = this[prop] + _unit[prop];
+		if(_observer.update)
+			_observer.update.apply(_dom);
 	};
-
 	var _onComplete = function() {
-		if (_reversing) {
-			if (_observer.reverse) _observer.reverse.apply(_dom);
-			if (_loop) _instance.play();
+		if(_reversing) {
+			if(_observer.reverse)
+				_observer.reverse.apply(_dom);
+			if(_loop)
+				_instance.play();
 			_reversing = false;
 		} else {
-			if (_observer.complete) _observer.complete.apply(_dom);
-			if (_loop) _instance.reverse();
+			if(_observer.complete)
+				_observer.complete.apply(_dom);
+			if(_loop)
+				_instance.reverse();
 		}
 	};
-
 	var _computeStyle = function(dom, compare) {
 		var style = {};
 
-		if (dom.currentStyle === undefined)
+		if(dom.currentStyle === undefined)
 			dom.currentStyle = getComputedStyle(dom);
 
-		for (var prop in compare) {
+		for(var prop in compare) {
 			var computedStyle = dom.currentStyle[prop];
 			var valueMatch = (/[0-9]+/).exec(computedStyle);
 			var value = valueMatch !== null ? Number(valueMatch[0]) : 0;
 			var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(computedStyle);
-			var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
+			var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop) ? '' : 'px');
 			style[prop] = value;
 			_unit[prop] = unit;
 		}
 
 		return style;
 	};
-
 	var _specialProperties = function(style) {
-		for (var prop in style) {
-			var specialProp = leocavalcante.Tween.specialPropsMap[prop];
-			if (specialProp !== undefined) {
+		for(var prop in style) {
+			var specialProp = leocavalcante.TweenDOM.specialPropsMap[prop];
+			if(specialProp !== undefined) {
 				style[specialProp] = style[prop];
 				delete style[prop];
 			}
 		}
 	};
-
 	var _start = function() {
 		_tween.start();
 	};
-
 	_instance = {
 		duration : function(value) {
 			_duration = value * 1000;
@@ -102,7 +93,7 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 			_specialProperties(style);
 			_from = _from || _computeStyle(_dom, style);
 			_to = style;
-            _tweening = _computeStyle(_dom, style);
+			_tweening = _computeStyle(_dom, style);
 			_tween = new TWEEN.Tween(_tweening);
 			_tween.to(style, _duration);
 			_tween.delay(_delay);
@@ -116,10 +107,10 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 			_specialProperties(style);
 			var from = _computeStyle(_dom, style);
 			_from = style;
-			for (var prop in style) {
+			for(var prop in style) {
 				var value = style[prop];
 				var unitMatch = (/%|in|cm|mm|em|ex|pt|pc|px/).exec(value);
-				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop)?'':'px') ;
+				var unit = unitMatch !== null ? unitMatch[0] : ((/opacity/).test(prop) ? '' : 'px');
 				_dom.style[prop] = value + unit;
 			}
 
@@ -153,22 +144,18 @@ leocavalcante.Tween.dom = leocavalcante.Tween.dom || function(element) {
 	return _instance;
 };
 
-leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
-	var _timeline = [],
-		_chain = [],
-		_timestamp = 0,
-		_length = 0,
-		_observer = {},
-		_highest = 0;
+leocavalcante.TweenDOM.timeline = leocavalcante.TweenDOM.timeline ||
+function() {
+	var _timeline = [], _chain = [], _timestamp = 0, _length = 0, _observer = {}, _highest = 0;
 
 	var _completed = function() {
-		if (_observer.complete) _observer.complete();
+		if(_observer.complete)
+			_observer.complete();
 	};
-
 	var _reversed = function() {
-		if (_observer.reverse) _observer.reverse();
+		if(_observer.reverse)
+			_observer.reverse();
 	};
-
 	return {
 		add : function(tween, sequence) {
 			_chain[_length] = tween.stop();
@@ -178,11 +165,13 @@ leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
 			_highest = Math.max(_highest, sequence || 0);
 		},
 		play : function() {
-			for (var i=0; i<_length; i++) _chain[i].play(_timeline[i]);
+			for(var i = 0; i < _length; i++)
+			_chain[i].play(_timeline[i]);
 			setTimeout(_completed, 1000 * _timestamp);
 		},
 		reverse : function() {
-			for (var i=0; i<_length; i++) _chain[i].reverse(_highest - _timeline[i]);
+			for(var i = 0; i < _length; i++)
+			_chain[i].reverse(_highest - _timeline[i]);
 			setTimeout(_reversed, 1000 * _timestamp);
 		},
 		on : function(event, listener) {
@@ -191,15 +180,15 @@ leocavalcante.Tween.timeline = leocavalcante.Tween.timeline || function() {
 	};
 };
 
-var Tween = Tween || leocavalcante.Tween;
+var TweenDOM = TweenDOM || leocavalcante.TweenDOM;
 
-var Linear = Linear || (function(){
+var Linear = Linear || ( function() {
 	return {
 		None : TWEEN.Easing.Linear.EaseNone
 	};
 }());
 
-var Quad = Quad || (function(){
+var Quad = Quad || ( function() {
 	return {
 		In : TWEEN.Easing.Quadratic.EaseIn,
 		Out : TWEEN.Easing.Quadratic.EaseOut,
@@ -207,7 +196,7 @@ var Quad = Quad || (function(){
 	};
 }());
 
-var Cubic = Cubic || (function(){
+var Cubic = Cubic || ( function() {
 	return {
 		In : TWEEN.Easing.Cubic.EaseIn,
 		Out : TWEEN.Easing.Cubic.EaseOut,
@@ -215,7 +204,7 @@ var Cubic = Cubic || (function(){
 	};
 }());
 
-var Quart = Quart || (function(){
+var Quart = Quart || ( function() {
 	return {
 		In : TWEEN.Easing.Quartic.EaseIn,
 		Out : TWEEN.Easing.Quartic.EaseOut,
@@ -223,7 +212,7 @@ var Quart = Quart || (function(){
 	};
 }());
 
-var Quint = Quint || (function(){
+var Quint = Quint || ( function() {
 	return {
 		In : TWEEN.Easing.Quintic.EaseIn,
 		Out : TWEEN.Easing.Quintic.EaseOut,
@@ -231,7 +220,7 @@ var Quint = Quint || (function(){
 	};
 }());
 
-var Sine = Sine || (function(){
+var Sine = Sine || ( function() {
 	return {
 		In : TWEEN.Easing.Sinusoidal.EaseIn,
 		Out : TWEEN.Easing.Sinusoidal.EaseOut,
@@ -239,7 +228,7 @@ var Sine = Sine || (function(){
 	};
 }());
 
-var Expo = Expo || (function(){
+var Expo = Expo || ( function() {
 	return {
 		In : TWEEN.Easing.Exponential.EaseIn,
 		Out : TWEEN.Easing.Exponential.EaseOut,
@@ -247,7 +236,7 @@ var Expo = Expo || (function(){
 	};
 }());
 
-var Circ = Circ || (function(){
+var Circ = Circ || ( function() {
 	return {
 		In : TWEEN.Easing.Circular.EaseIn,
 		Out : TWEEN.Easing.Circular.EaseOut,
@@ -255,7 +244,7 @@ var Circ = Circ || (function(){
 	};
 }());
 
-var Elastic = Elastic || (function(){
+var Elastic = Elastic || ( function() {
 	return {
 		In : TWEEN.Easing.Elastic.EaseIn,
 		Out : TWEEN.Easing.Elastic.EaseOut,
@@ -263,7 +252,7 @@ var Elastic = Elastic || (function(){
 	};
 }());
 
-var Back = Back || (function(){
+var Back = Back || ( function() {
 	return {
 		In : TWEEN.Easing.Back.EaseIn,
 		Out : TWEEN.Easing.Back.EaseOut,
@@ -271,7 +260,7 @@ var Back = Back || (function(){
 	};
 }());
 
-var Bounce = Bounce || (function(){
+var Bounce = Bounce || ( function() {
 	return {
 		In : TWEEN.Easing.Bounce.EaseIn,
 		Out : TWEEN.Easing.Bounce.EaseOut,
@@ -280,3 +269,4 @@ var Bounce = Bounce || (function(){
 }());
 
 TWEEN.start();
+

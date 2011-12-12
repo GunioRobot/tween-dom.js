@@ -1,96 +1,112 @@
 <!DOCTYPE html>
 <html>
-<head>
-<style>
-@import url(http://fonts.googleapis.com/css?family=Convergence);
+	<head>
+		<title>Tween-Dom.js</title>
+		<style>
+			@import url(http://fonts.googleapis.com/css?family=Convergence);
+			html, body, div, p {
+				position: relative;
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-family: 'Convergence', sans-serif;
+			}
+			.display-object {
+				width: 100px;
+				height: 100px;
+			}
+			#red-do {
+				background: red;
+			}
+			#green-do {
+				background: green;
+			}
+			#blue-do {
+				background: blue;
+				left: 100px;
+			}
+			#tl-target {
+				background: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="red-do" class="display-object"></div>
+			<div id="green-do" class="display-object"></div>
+			<div id="blue-do" class="display-object"></div>
+		</div>
+		<div id="comparation">
+			<p id="tween-js">
+				Tween.js
+			</p>
+			<p id="tween-dom-js">
+				Tween-Dom.js
+			</p>
+		</div>
+		<div id="timeline">
+			<div id="tl-target" class="display-object"></div>
+		</div>
+		<script src="tween-dom.js"></script>
+		<script>
+			TweenDOM.tween(document.getElementById('red-do')).duration(2).to({
+				'x' : 100
+			});
 
-html, body, div, p {
-	position: relative;
-	margin: 0;
-	padding: 0;
-}
+			TweenDOM.tween('green-do').delay(2).ease(Expo.InOut).to({
+				'x' : 100
+			});
 
-body {
-	font-family: 'Convergence', sans-serif;
-}
+			TweenDOM.tween('blue-do').delay(1).ease(Elastic.Out).on('reverse', function() {
+			}).yoyo().from({
+				'left' : 0
+			});
 
-.display-object {
-	width: 100px;
-	height: 100px;
-}
+			var tl = TweenDOM.timeline();
+			tl.add(TweenDOM.tween('tl-target').to({
+				'left' : 100
+			}));
+			tl.add(TweenDOM.tween('tl-target').to({
+				'top' : 100
+			}), 1);
+			tl.add(TweenDOM.tween('tl-target').to({
+				'opacity' : 0
+			}), 2);
+			tl.on('complete', onTlComplete);
+			tl.on('reverse', onTlReverse);
+			tl.play();
 
-#red-do {
-	background: red;
-}
+			function onTlComplete() {
+				tl.reverse();
+			}
 
-#green-do {
-	background: green;
-}
+			function onTlReverse() {
+				tl.play();
+			}
 
-#blue-do {
-	background: blue;
-	left: 100px;
-}
-#tl-target {
-	background: gray;
-}
-</style>
-</head>
-<body>
-<div id="container">
-	<div id="red-do" class="display-object"></div>
-	<div id="green-do" class="display-object"></div>
-	<div id="blue-do" class="display-object"></div>
-</div>
-<div id="comparation">
-	<p id="tween-js">Tween.js</p>
-	<p id="tween-dom-js">Tween-Dom.js</p>
-</div>
-<div id="timeline">
-	<div id="tl-target" class="display-object"></div>
-</div>
-<script src="Tween-Dom.js"></script>
-<script>
-	Tween.dom(document.getElementById('red-do')).duration(2).to({'x':100});
+			/* using regular Tween.js */
+			//TWEEN.start();
 
-	Tween.dom('green-do').delay(2).ease(Expo.InOut).to({'x':100});
+			var tweenjs = document.getElementById('tween-js');
+			var position = {
+				x : 0
+			};
+			new TWEEN.Tween(position).to({
+				x : 100
+			}, 2000).easing(TWEEN.Easing.Exponential.EaseInOut).onUpdate(update).start();
 
-	Tween.dom('blue-do').delay(1).ease(Elastic.Out).on('reverse', function(){
-		//
-	}).yoyo().from({'left':0});
+			function update() {
+				tweenjs.style.left = this.x + 'px';
+			}
 
+			/* --- */
 
-	var tl = Tween.timeline();
-	tl.add(Tween.dom('tl-target').to({'left':100}));
-	tl.add(Tween.dom('tl-target').to({'top':100}), 1);
-	tl.add(Tween.dom('tl-target').to({'opacity':0}), 2);
-	tl.on('complete', onTlComplete);
-	tl.on('reverse', onTlReverse);
-	tl.play();
-
-	function onTlComplete() {
-		tl.reverse();
-	}
-
-	function onTlReverse() {
-		tl.play();
-	}
-
-	/* using regular Tween.js */
-	//TWEEN.start();
-
-	var tweenjs = document.getElementById('tween-js');
-	var position = {x:0};
-	new TWEEN.Tween(position).to({x:100}, 2000).easing(TWEEN.Easing.Exponential.EaseInOut).onUpdate(update).start();
-
-	function update() {
-		tweenjs.style.left = this.x + 'px';
-	}
-	/* --- */
-
-	/* using Tween-Dom.js */
-	Tween.dom('tween-dom-js').duration(2).ease(Expo.InOut).to({'x':100});
-	/* --- */
-</script>
-</body>
+			/* using Tween-Dom.js */
+			TweenDOM.tween('tween-dom-js').duration(2).ease(Expo.InOut).to({
+				'x' : 100
+			});
+			/* --- */
+		</script>
+	</body>
 </html>
